@@ -5,6 +5,7 @@ import "./Employees.css"
 export const EmployeeList = () => {
     const [employees, setEmployees] = useState([])
 
+    //fetch employees from API
     useEffect(
         () => {
             fetch(`http://localhost:8088/users?isStaff=true`)
@@ -22,8 +23,6 @@ export const EmployeeList = () => {
         email={employee.email} />)}
     </article>
 }
-
-
 
 
 //Query String parameter: everything after the question mark is additional parameters in the request to the server. Puts condition on the request. In this case it will only return users who are staff

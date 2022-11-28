@@ -4,12 +4,12 @@ import { useParams } from "react-router-dom"
 
 export const EmployeeDetails = () => {
     const {employeeId} = useParams() //useparams hook captures the employeeId and deconstructs it (state we're getting from the route)
-    const [employee, updateEmployee] = useState() //state variable for the employee
+    const [employee, updateEmployee] = useState({}) //state variable for the employee
 
 
     useEffect(
         () => {
-            fetch(`http://localhost:8088/employees?_expand=user&embed=employeeTickets&userId=${employeeId}`) //filters through all employees and returns only ones that meet theses conditions
+            fetch(`http://localhost:8088/employees?_expand=user&_embed=employeeTickets&userId=${employeeId}`) //filters through all employees and returns only ones that meet theses conditions
             .then(response => response.json())
             .then((data) => {
                 const singleEmployee = data[0]
@@ -19,7 +19,15 @@ export const EmployeeDetails = () => {
         [employeeId]
     )
 
-    return <></>
+    //now that we have all the state we need we can build JSX below:
+    //optional chaining ?.  "only keep going down this path if the properties exist"
+    return <section className="employee">
+        <header className="employee_header">{employee?.user?.fullName}</header>
+        <div>Email: {employee?.user?.email}</div>
+        <div>Specialty: {employee.specialty}</div>
+        <div>Rate: {employee.rate}</div>
+        <footer className="employee_footer">Currently working on {employee?.employeeTickets?.length} tickets</footer>
+        </section>
 }
 
 
