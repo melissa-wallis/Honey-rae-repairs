@@ -1,23 +1,18 @@
-import { Outlet, Route, Routes } from "react-router-dom"
-import { TicketForm } from "../tickets/TicketForm"
-import { TicketList } from "../tickets/TicketList"
+//This module controls what view the user sees based on what type of user they are (customer vs staff)
+
+import { CustomerViews } from "./CustomerViews"
+import { EmployeeViews } from "./EmployeeViews"
 
 export const ApplicationViews = () => {
-	return (
-        <Routes>
-            <Route path="/" element={
-                <>
-                    <h1>Honey Rae Repair Shop</h1>
-                    <div>Your one-stop-shop to get all your electronics fixed</div>
 
-                    <Outlet />
-                </>
-            }>
-
-                <Route path="tickets" element={ <TicketList /> } />
-
-                <Route path="ticket/create" element={ <TicketForm /> } />
-            </Route>
-        </Routes>
-    )
+	const localHoneyUser = localStorage.getItem("honey_user") //get honeyUser object out of local storage, return as a string
+    const honeyUserObject = JSON.parse(localHoneyUser) //makes variable above an object so we can use it. this is an oject with two properties: id and staff
+    
+    if (honeyUserObject.staff) {
+        //return employee view
+        return <EmployeeViews />
+    } else {
+        //return customer view
+        return <CustomerViews />
+    }
 }

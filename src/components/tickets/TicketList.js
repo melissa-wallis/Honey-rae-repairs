@@ -17,16 +17,33 @@ import { useNavigate } from "react-router-dom"
 import "./Tickets.css"
 
 //take permenant state in a remote API, pull the state into this component and update the appropriate state variable
-export const TicketList = () => {
+//the value of searchTermState is the state from the ticketContainer parent
+export const TicketList = ({searchTermState}) => {
     const [tickets, setTickets] = useState([]) //all tickets ORIGINAL STATE
-    const [filteredTickets, setFiltered] = useState([]) //filtered tickets based on user (staff vs customer) THIS IS THE STATE BEING DISPLAYED
+    const [filteredTickets, setFiltered] = useState([]) //filtered tickets based user interaction THIS IS THE STATE BEING DISPLAYED
     const [emergency, setEmergency] = useState(false) //for emergency ticket button, default state is false (shows all tickets, not just emergencies) when emergency only button is clicked, state changes to true and displays only emergency tickets)
-    const [openOnly, updateOpenOnly ] = useState(false)
+    const [openOnly, updateOpenOnly] = useState(false)
     const navigate = useNavigate()
 
     const localHoneyUser = localStorage.getItem("honey_user") //get honeyUser object out of local storage, return as a string
     const honeyUserObject = JSON.parse(localHoneyUser) //makes variable above an object so we can use it. this is an oject with two properties: id and staff
     
+
+//observes searchTermState, filters and displays tickets based on what is entered in search field. toLowerCase both on description object itself and search terms so that they will always match
+    useEffect (
+        () => {
+            const searchedTickets = tickets.filter(ticket => {
+                return ticket.description.toLowerCase().startsWith(searchTermState.toLowerCase())
+            })
+            setFiltered(searchedTickets)
+        },
+        [searchTermState]
+    )
+    
+
+
+
+
     //this useEffect hook observes emergency state, if emergency is true
     useEffect(
         () => {
